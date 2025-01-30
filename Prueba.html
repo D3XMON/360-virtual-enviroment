@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Basic Example</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        body {
+            margin: 0;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            background-color: orange;
+            padding: 10px 20px;
+            color: white;
+            cursor: pointer;
+            position: fixed;
+            width: 50%;
+            top: 0;
+            left: 25%;
+            z-index: 1000;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+            margin-right: -10000px;
+            text-align: center;
+
+        }
+
+        .menu {
+            display: none;
+            background-color: #f1f1f1;
+            position: fixed;
+            width: 50%;
+            top: 35px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 999;
+            text-align: center;
+            left: 26.5%;
+            border-radius: 10px;
+        }
+
+        .menu a {
+            display: block;
+            color: black;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 10px;
+        }
+
+        .menu a:hover {
+            background-color: #ddd;
+        }
+
+        #texto {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.26);
+            color: rgb(255, 255, 255);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 30px;
+            font-style: italic;
+            /* Aplica cursiva al texto */
+            font-family: 'Georgia', serif;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar" onclick="toggleMenu()">Edificio Guillermo de Ockam</div>
+    <div class="menu" id="menu">
+        <a href="#home">Inicio</a>
+        <a href="#services">Servicios</a>
+        <a href="#contact">Contacto</a>
+        <a href="#about">Acerca de</a>
+    </div>
+
+    <div id="texto"></div>
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            if (menu.style.display === 'block') {
+                menu.style.display = 'none';
+            } else {
+                menu.style.display = 'block';
+            }
+        }
+
+        window.addEventListener('click', function (event) {
+            const menu = document.getElementById('menu');
+            const navbar = document.querySelector('.navbar');
+            if (!navbar.contains(event.target) && !menu.contains(event.target)) {
+                menu.style.display = 'none';
+            }
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="scripts/OrbitControls.js"></script>
+    <script>
+        //Cambio de edificios
+        var cambio = 3;
+        //recibirEdificio
+        var bobo = localStorage.getItem('textoCambiar8');
+        //Cambio de escenas
+        var estadoCambioFondo = 18;
+        //Recibir instancia
+        if (bobo == 3) {
+            estadoCambioFondo = 12;
+            localStorage.removeItem('textoCambiar8');
+        }
+        // Crear una escena
+        var scene = new THREE.Scene();
+        //Cambio de texto
+        var nuevoTexto = "";
+
+        // Crear una cámara
+        var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 5;
+
+        // Crear un renderizador
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        //
+        var loader = new THREE.CubeTextureLoader();
+        var texture = loader.load([
+            'images360/GO/Centropx.png',
+            'images360/GO/Centronx.png',
+            'images360/GO/Centropy.png',
+            'images360/GO/Centrony.png',
+            'images360/GO/Centropz.png',
+            'images360/GO/Centronz.png',
+        ]);
+        //
+        var texturePrueba = loader.load([
+            'images360/GO/4toder/0px.png',
+            'images360/GO/4toder/0nx.png',
+            'images360/GO/4toder/0py.png',
+            'images360/GO/4toder/0ny.png',
+            'images360/GO/4toder/0pz.png',
+            'images360/GO/4toder/0nz.png',
+        ]);
+        //
+        var texturePrueba2 = loader.load([
+            'images360/GO/4toder/1px.png',
+            'images360/GO/4toder/1nx.png',
+            'images360/GO/4toder/1py.png',
+            'images360/GO/4toder/1ny.png',
+            'images360/GO/4toder/1pz.png',
+            'images360/GO/4toder/1nz.png',
+        ]);
+        //
+        var texturePrueba3 = loader.load([
+            'images360/GO/4toizq/0px.png',
+            'images360/GO/4toizq/0nx.png',
+            'images360/GO/4toizq/0py.png',
+            'images360/GO/4toizq/0ny.png',
+            'images360/GO/4toizq/0pz.png',
+            'images360/GO/4toizq/0nz.png',
+        ]);
+        //
+        var texturePrueba4 = loader.load([
+            'images360/GO/4toizq/1px.png',
+            'images360/GO/4toizq/1nx.png',
+            'images360/GO/4toizq/1py.png',
+            'images360/GO/4toizq/1ny.png',
+            'images360/GO/4toizq/1pz.png',
+            'images360/GO/4toizq/1nz.png',
+        ]);
+        //
+        var texturePrueba5 = loader.load([
+            'images360/GO/4toizq/2px.png',
+            'images360/GO/4toizq/2nx.png',
+            'images360/GO/4toizq/2py.png',
+            'images360/GO/4toizq/2ny.png',
+            'images360/GO/4toizq/2pz.png',
+            'images360/GO/4toizq/2nz.png',
+        ]);
+        var texturePrueba6 = loader.load([
+            'images360/GO/3piso/Centropx.png',
+            'images360/GO/3piso/Centronx.png',
+            'images360/GO/3piso/Centropy.png',
+            'images360/GO/3piso/Centrony.png',
+            'images360/GO/3piso/Centropz.png',
+            'images360/GO/3piso/Centronz.png',
+        ]);
+        var texturePrueba7 = loader.load([
+            'images360/GO/3piso/3erder/0px.png',
+            'images360/GO/3piso/3erder/0nx.png',
+            'images360/GO/3piso/3erder/0py.png',
+            'images360/GO/3piso/3erder/0ny.png',
+            'images360/GO/3piso/3erder/0pz.png',
+            'images360/GO/3piso/3erder/0nz.png',
+        ]);
+        var texturePrueba8 = loader.load([
+            'images360/GO/3piso/3erder/1px.png',
+            'images360/GO/3piso/3erder/1nx.png',
+            'images360/GO/3piso/3erder/1py.png',
+            'images360/GO/3piso/3erder/1ny.png',
+            'images360/GO/3piso/3erder/1pz.png',
+            'images360/GO/3piso/3erder/1nz.png',
+        ]);
+        var texturePrueba9 = loader.load([
+            'images360/GO/3piso/3erizq/0px.png',
+            'images360/GO/3piso/3erizq/0nx.png',
+            'images360/GO/3piso/3erizq/0py.png',
+            'images360/GO/3piso/3erizq/0ny.png',
+            'images360/GO/3piso/3erizq/0pz.png',
+            'images360/GO/3piso/3erizq/0nz.png',
+        ]);
+        var texturePrueba10 = loader.load([
+            'images360/GO/3piso/3erizq/1px.png',
+            'images360/GO/3piso/3erizq/1nx.png',
+            'images360/GO/3piso/3erizq/1py.png',
+            'images360/GO/3piso/3erizq/1ny.png',
+            'images360/GO/3piso/3erizq/1pz.png',
+            'images360/GO/3piso/3erizq/1nz.png',
+        ]);
+        var texturePrueba11 = loader.load([
+            'images360/GO/3piso/3erizq/2px.png',
+            'images360/GO/3piso/3erizq/2nx.png',
+            'images360/GO/3piso/3erizq/2py.png',
+            'images360/GO/3piso/3erizq/2ny.png',
+            'images360/GO/3piso/3erizq/2pz.png',
+            'images360/GO/3piso/3erizq/2nz.png',
+        ]);
+        var texturePrueba12 = loader.load([
+            'images360/GO/2piso/Centropx.png',
+            'images360/GO/2piso/Centronx.png',
+            'images360/GO/2piso/Centropy.png',
+            'images360/GO/2piso/Centrony.png',
+            'images360/GO/2piso/Centropz.png',
+            'images360/GO/2piso/Centronz.png',
+        ]);
+        var texturePrueba13 = loader.load([
+            'images360/GO/2piso/2doder/0px.png',
+            'images360/GO/2piso/2doder/0nx.png',
+            'images360/GO/2piso/2doder/0py.png',
+            'images360/GO/2piso/2doder/0ny.png',
+            'images360/GO/2piso/2doder/0pz.png',
+            'images360/GO/2piso/2doder/0nz.png',
+        ]);
+        var texturePrueba14 = loader.load([
+            'images360/GO/2piso/2doder/1px.png',
+            'images360/GO/2piso/2doder/1nx.png',
+            'images360/GO/2piso/2doder/1py.png',
+            'images360/GO/2piso/2doder/1ny.png',
+            'images360/GO/2piso/2doder/1pz.png',
+            'images360/GO/2piso/2doder/1nz.png',
+        ]);
+        var texturePrueba15 = loader.load([
+            'images360/GO/2piso/2doizq/0px.png',
+            'images360/GO/2piso/2doizq/0nx.png',
+            'images360/GO/2piso/2doizq/0py.png',
+            'images360/GO/2piso/2doizq/0ny.png',
+            'images360/GO/2piso/2doizq/0pz.png',
+            'images360/GO/2piso/2doizq/0nz.png',
+        ]);
+        var texturePrueba16 = loader.load([
+            'images360/GO/2piso/2doizq/1px.png',
+            'images360/GO/2piso/2doizq/1nx.png',
+            'images360/GO/2piso/2doizq/1py.png',
+            'images360/GO/2piso/2doizq/1ny.png',
+            'images360/GO/2piso/2doizq/1pz.png',
+            'images360/GO/2piso/2doizq/1nz.png',
+        ]);
+        var texturePrueba17 = loader.load([
+            'images360/GO/2piso/2doizq/2px.png',
+            'images360/GO/2piso/2doizq/2nx.png',
+            'images360/GO/2piso/2doizq/2py.png',
+            'images360/GO/2piso/2doizq/2ny.png',
+            'images360/GO/2piso/2doizq/2pz.png',
+            'images360/GO/2piso/2doizq/2nz.png',
+        ]);
+        var texturePrueba18 = loader.load([
+            'images360/GO/1piso/Centropx.png',
+            'images360/GO/1piso/Centronx.png',
+            'images360/GO/1piso/Centropy.png',
+            'images360/GO/1piso/Centrony.png',
+            'images360/GO/1piso/Centropz.png',
+            'images360/GO/1piso/Centronz.png',
+        ]);
+        var texturePrueba19 = loader.load([
+            'images360/GO/1piso/1pisoder/1px.png',
+            'images360/GO/1piso/1pisoder/1nx.png',
+            'images360/GO/1piso/1pisoder/1py.png',
+            'images360/GO/1piso/1pisoder/1ny.png',
+            'images360/GO/1piso/1pisoder/1pz.png',
+            'images360/GO/1piso/1pisoder/1nz.png',
+        ]);
+        var texturePrueba20 = loader.load([
+            'images360/GO/1piso/1pisoder/2px.png',
+            'images360/GO/1piso/1pisoder/2nx.png',
+            'images360/GO/1piso/1pisoder/2py.png',
+            'images360/GO/1piso/1pisoder/2ny.png',
+            'images360/GO/1piso/1pisoder/2pz.png',
+            'images360/GO/1piso/1pisoder/2nz.png',
+        ]);
+        var texturePrueba21 = loader.load([
+            'images360/GO/1piso/0px.png',
+            'images360/GO/1piso/0nx.png',
+            'images360/GO/1piso/0py.png',
+            'images360/GO/1piso/0ny.png',
+            'images360/GO/1piso/0pz.png',
+            'images360/GO/1piso/0nz.png',
+        ]);
+        //
+        scene.background = texture;
+        // Crear geometria
+        const geometria = new THREE.PlaneGeometry(10, 10);
+        //Textura boton
+        const textureLoader = new THREE.TextureLoader();
+        const textureBoton = textureLoader.load('/Botones/flecha-correcta.png');
+        //
+        const material = new THREE.MeshBasicMaterial({ map: textureBoton, transparent: true });
+        //
+        const textureLoader1 = new THREE.TextureLoader();
+        const textureBoton1 = textureLoader1.load('/Botones/escalera_abajo.png');
+        //
+        const material1 = new THREE.MeshBasicMaterial({ map: textureBoton1, transparent: true });
+        //
+        const textureLoader2 = new THREE.TextureLoader();
+        const textureBoton2 = textureLoader2.load('/Botones/escalera_arriba.png');
+        //
+        const material2 = new THREE.MeshBasicMaterial({ map: textureBoton2, transparent: true });
+        //
+        const textureLoader4 = new THREE.TextureLoader();
+        const textureBoton4 = textureLoader4.load('/Botones/PS_logo.png');
+        //
+        const material4 = new THREE.MeshBasicMaterial({ map: textureBoton4, transparent: true });
+        //
+        const textureLoader3 = new THREE.TextureLoader();
+        const textureBoton3 = textureLoader3.load('/Botones/ubicacion.png');
+        //
+        const material3 = new THREE.MeshBasicMaterial({ map: textureBoton3, transparent: true });
+        //
+        const button = new THREE.Mesh(geometria, material);
+        scene.add(button);
+        button.rotation.set(0, 179, 0);
+        button.position.set(5, 0, 100);
+        //
+        const button2 = new THREE.Mesh(geometria, material);
+        button2.rotation.set(0, 0, 0);
+        button2.position.set(9, 0, -100);
+
+        //
+        const button3 = new THREE.Mesh(geometria, material);
+        button3.rotation.set(0, 179.02, 0);
+        button3.position.set(-5.5, 0, 100);
+        //
+        const button4 = new THREE.Mesh(geometria, material);
+        button4.rotation.set(0, 0, 0);
+        button4.position.set(-16, 0, -100);
+        //
+        scene.add(button2);
+        scene.add(button3);
+        scene.add(button4);
+        //
+        const button5 = new THREE.Mesh(geometria, material);
+        scene.add(button5);
+        button5.rotation.set(0, 0, 0);
+        button5.position.set(-5, 0, -100);
+        //
+        const button7 = new THREE.Mesh(geometria, material);
+        button7.rotation.set(0, 0, 0);
+        button7.position.set(-4, 0, -100);
+        scene.add(button7);
+        //
+        const button6 = new THREE.Mesh(geometria, material);
+        button6.rotation.set(0, 179.02, 0);
+        button6.position.set(3, 0, 100);
+        scene.add(button6);
+        //
+        const button8 = new THREE.Mesh(geometria, material);
+        button8.rotation.set(0, 0, 0);
+        button8.position.set(0, 0, -100);
+        scene.add(button8);
+        //
+        const button9 = new THREE.Mesh(geometria, material);
+        button9.rotation.set(0, 179.02, 0);
+        button9.position.set(-1, 0, 100);
+        scene.add(button9);
+        //
+        const button10 = new THREE.Mesh(geometria, material1);
+        button10.rotation.set(0, 180, 0);
+        button10.position.set(50, 0, 0);
+        scene.add(button10);
+        //
+        const button11 = new THREE.Mesh(geometria, material);
+        button11.rotation.set(0, 179.02, 0);
+        button11.position.set(2, 0, 100);
+        scene.add(button11);
+        //
+        const button12 = new THREE.Mesh(geometria, material);
+        scene.add(button12);
+        button12.rotation.set(0, 179, 0);
+        button12.position.set(2, 0, 100);
+
+        //
+        const button13 = new THREE.Mesh(geometria, material);
+        scene.add(button13);
+        button13.rotation.set(0, 0, 0);
+        button13.position.set(2, 0, -100);
+        //
+        const button14 = new THREE.Mesh(geometria, material2);
+        button14.rotation.set(0, 180, 0);
+        button14.position.set(50, 0, 0);
+        scene.add(button14);
+        //
+        const button15 = new THREE.Mesh(geometria, material);
+        button15.rotation.set(0, 179, 0);
+        button15.position.set(6, 0, 100);
+        scene.add(button15);
+        //
+        const button16 = new THREE.Mesh(geometria, material);
+        button16.rotation.set(0, 0, 0);
+        button16.position.set(-4, 0, -100);
+        scene.add(button16);
+        //
+        const button17 = new THREE.Mesh(geometria, material);
+        button17.rotation.set(0, 0, 0);
+        button17.position.set(5, 0, -100);
+        scene.add(button17);
+        //
+        const button18 = new THREE.Mesh(geometria, material);
+        button18.rotation.set(0, 0, 0);
+        button18.position.set(-8, 0, -100);
+        scene.add(button18);
+        //
+        const button19 = new THREE.Mesh(geometria, material);
+        button19.rotation.set(0, 179.02, 0);
+        button19.position.set(8, 0, 100);
+        scene.add(button19);
+        //
+        const button20 = new THREE.Mesh(geometria, material);
+        button20.rotation.set(0, 0, 0);
+        button20.position.set(2, 0, -100);
+        scene.add(button20);
+        //
+        const button21 = new THREE.Mesh(geometria, material);
+        button21.rotation.set(0, 179.02, 0);
+        button21.position.set(-1, 0, 100);
+        scene.add(button21);
+        //
+        const button22 = new THREE.Mesh(geometria, material);
+        button22.rotation.set(0, 179, 0);
+        button22.position.set(4, 0, 100);
+        scene.add(button22);
+        //
+        const button23 = new THREE.Mesh(geometria, material1);
+        button23.rotation.set(0, 180, 0);
+        button23.position.set(50, 0, 10);
+        scene.add(button23);
+        //
+        const button24 = new THREE.Mesh(geometria, material1);
+        button24.rotation.set(0, 180, 0);
+        button24.position.set(50, 0, 10);
+        scene.add(button24);
+        //
+        const button25 = new THREE.Mesh(geometria, material);
+        scene.add(button25);
+        button25.rotation.set(0, 179, 0);
+        button25.position.set(2, 0, 100);
+        //
+        const button26 = new THREE.Mesh(geometria, material);
+        scene.add(button26);
+        button26.rotation.set(0, 0, 0);
+        button26.position.set(4, 0, -100);
+        //
+        const button27 = new THREE.Mesh(geometria, material2);
+        button27.rotation.set(0, 180, 0);
+        button27.position.set(50, 0, 0);
+        scene.add(button27);
+        //
+        const button28 = new THREE.Mesh(geometria, material);
+        scene.add(button28);
+        button28.rotation.set(0, 179, 0);
+        button28.position.set(18, 0, 70);
+        //
+        const button29 = new THREE.Mesh(geometria, material);
+        scene.add(button29);
+        button29.rotation.set(0, 0, 0);
+        button29.position.set(-25, 0, -70);
+        //
+        const button30 = new THREE.Mesh(geometria, material);
+        button30.rotation.set(0, 0, 0);
+        button30.position.set(0, 0, -100);
+        scene.add(button30);
+        //
+        const button31 = new THREE.Mesh(geometria, material);
+        button31.rotation.set(0, 179, 0);
+        button31.position.set(10, 0, 80);
+        scene.add(button31);
+        //
+        const button32 = new THREE.Mesh(geometria, material);
+        button32.rotation.set(0, 0, 0);
+        button32.position.set(-13, 0, -80);
+        scene.add(button32);
+        //
+        const button33 = new THREE.Mesh(geometria, material);
+        button33.rotation.set(0, 179, 0);
+        button33.position.set(0, 0, 80);
+        scene.add(button33);
+
+        //
+        const button34 = new THREE.Mesh(geometria, material);
+        button34.rotation.set(0, 0, 0);
+        button34.position.set(-2, 0, -80);
+        scene.add(button34);
+        //
+        const button35 = new THREE.Mesh(geometria, material);
+        button35.rotation.set(0, 179, 0);
+        button35.position.set(-1, 0, 80);
+        scene.add(button35);
+        //
+        const button36 = new THREE.Mesh(geometria, material1);
+        scene.add(button36);
+        button36.rotation.set(0, 179, 0);
+        button36.position.set(2, 0, 50);
+        //
+        const button37 = new THREE.Mesh(geometria, material);
+        scene.add(button37);
+        button37.rotation.set(0, 0, 0);
+        button37.position.set(-1, 0, -100);
+        //
+        const button38 = new THREE.Mesh(geometria, material2);
+        button38.rotation.set(0, 180, 0);
+        button38.position.set(50, 0, 0);
+        scene.add(button38);
+        //
+        const button39 = new THREE.Mesh(geometria, material2);
+        scene.add(button39);
+        button39.rotation.set(0, 90, 0);
+        button39.position.set(-50, 0, 1);
+        //
+        const button40 = new THREE.Mesh(geometria, material);
+        button40.rotation.set(0, 179.02, 0);
+        button40.position.set(8, 0, 100);
+        scene.add(button40);
+        //
+        const button41 = new THREE.Mesh(geometria, material);
+        button41.rotation.set(0, 0, 0);
+        button41.position.set(-2, 0, -100);
+        scene.add(button41);
+        //
+        const button42 = new THREE.Mesh(geometria, material);
+        button42.rotation.set(0, 0, 0);
+        button42.position.set(4, 0, -100);
+        scene.add(button42);
+        //
+        const button43 = new THREE.Mesh(geometria, material4);
+        button43.rotation.set(0, 90, 0);
+        button43.position.set(-50, 0, 0);
+        scene.add(button43);
+        //
+        const button44 = new THREE.Mesh(geometria, material3);
+        button44.rotation.set(0, 90, 0);
+        button44.position.set(-50, 0, 0);
+        scene.add(button44);
+        //
+        function onDocumentMouseDown(event) {
+            event.preventDefault();
+            const raycaster = new THREE.Raycaster();
+            const mouse = new THREE.Vector2();
+
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+
+            const intersects = raycaster.intersectObject(button);
+            const intersects2 = raycaster.intersectObject(button2);
+            const intersects3 = raycaster.intersectObject(button3);
+            const intersects4 = raycaster.intersectObject(button4);
+            const intersects5 = raycaster.intersectObject(button5);
+            const intersects6 = raycaster.intersectObject(button6);
+            const intersects7 = raycaster.intersectObject(button7);
+            const intersects8 = raycaster.intersectObject(button8);
+            const intersects9 = raycaster.intersectObject(button9);
+            const intersects10 = raycaster.intersectObject(button10);
+            const intersects11 = raycaster.intersectObject(button11);
+            const intersects12 = raycaster.intersectObject(button12);
+            const intersects13 = raycaster.intersectObject(button13);
+            const intersects14 = raycaster.intersectObject(button14);
+            const intersects15 = raycaster.intersectObject(button15);
+            const intersects16 = raycaster.intersectObject(button16);
+            const intersects17 = raycaster.intersectObject(button17);
+            const intersects18 = raycaster.intersectObject(button18);
+            const intersects19 = raycaster.intersectObject(button19);
+            const intersects20 = raycaster.intersectObject(button20);
+            const intersects21 = raycaster.intersectObject(button21);
+            const intersects22 = raycaster.intersectObject(button22);
+            const intersects23 = raycaster.intersectObject(button23);
+            const intersects24 = raycaster.intersectObject(button24);
+            const intersects25 = raycaster.intersectObject(button25);
+            const intersects26 = raycaster.intersectObject(button26);
+            const intersects27 = raycaster.intersectObject(button27);
+            const intersects28 = raycaster.intersectObject(button28);
+            const intersects29 = raycaster.intersectObject(button29);
+            const intersects30 = raycaster.intersectObject(button30);
+            const intersects31 = raycaster.intersectObject(button31);
+            const intersects32 = raycaster.intersectObject(button32);
+            const intersects33 = raycaster.intersectObject(button33);
+            const intersects34 = raycaster.intersectObject(button34);
+            const intersects35 = raycaster.intersectObject(button35);
+            const intersects36 = raycaster.intersectObject(button36);
+            const intersects37 = raycaster.intersectObject(button37);
+            const intersects38 = raycaster.intersectObject(button38);
+            const intersects39 = raycaster.intersectObject(button39);
+            const intersects40 = raycaster.intersectObject(button40);
+            const intersects41 = raycaster.intersectObject(button41);
+            const intersects42 = raycaster.intersectObject(button42);
+            const intersects43 = raycaster.intersectObject(button43);
+            const intersects44 = raycaster.intersectObject(button44);
+            //
+            if (intersects44.length > 0) {
+                localStorage.setItem('textoCambiar10', cambio);
+                window.location.href = 'Entrada.html';
+
+            }
+            if (intersects43.length > 0) {
+                localStorage.setItem('textoCambiar9', cambio);
+                window.location.href = 'Ps.html';
+
+            }
+            if (intersects42.length > 0) {
+                estadoCambioFondo = 18;
+
+            }
+            if (intersects37.length > 0) {
+                estadoCambioFondo = 21;
+
+            }
+            if (intersects39.length > 0) {
+                estadoCambioFondo = 18;
+
+            }
+            if (intersects41.length > 0) {
+                estadoCambioFondo = 19;
+
+            }
+            if (intersects40.length > 0) {
+                estadoCambioFondo = 20;
+
+            }
+            if (intersects36.length > 0) {
+                estadoCambioFondo = 19;
+
+            }
+            if (intersects38.length > 0) {
+                estadoCambioFondo = 12;
+
+            }
+            if (intersects24.length > 0) {
+                estadoCambioFondo = 18;
+
+            }
+            if (intersects35.length > 0) {
+                estadoCambioFondo = 16;
+
+            }
+            if (intersects34.length > 0) {
+                estadoCambioFondo = 17;
+
+            }
+            if (intersects33.length > 0) {
+                estadoCambioFondo = 15;
+
+            }
+            if (intersects32.length > 0) {
+                estadoCambioFondo = 16;
+
+            }
+            if (intersects31.length > 0) {
+                estadoCambioFondo = 12;
+
+            }
+            if (intersects26.length > 0) {
+                estadoCambioFondo = 15;
+
+            }
+            if (intersects30.length > 0) {
+                estadoCambioFondo = 13;
+
+            }
+            if (intersects28.length > 0) {
+                estadoCambioFondo = 14;
+
+            }
+            if (intersects29.length > 0) {
+                estadoCambioFondo = 12;
+
+            }
+            if (intersects25.length > 0) {
+                estadoCambioFondo = 13;
+
+            }
+            if (intersects27.length > 0) {
+                estadoCambioFondo = 6;
+
+            }
+            if (intersects23.length > 0) {
+                estadoCambioFondo = 12;
+
+            }
+            if (intersects22.length > 0) {
+                estadoCambioFondo = 10;
+
+            }
+            if (intersects20.length > 0) {
+                estadoCambioFondo = 11;
+
+            }
+            if (intersects21.length > 0) {
+                estadoCambioFondo = 9;
+
+            }
+            if (intersects19.length > 0) {
+                estadoCambioFondo = 6;
+
+            }
+            if (intersects18.length > 0) {
+                estadoCambioFondo = 10;
+
+            }
+            if (intersects13.length > 0) {
+                estadoCambioFondo = 9;
+
+            }
+            if (intersects17.length > 0) {
+                estadoCambioFondo = 7;
+
+            }
+            if (intersects15.length > 0) {
+                estadoCambioFondo = 8;
+
+            }
+            if (intersects16.length > 0) {
+                estadoCambioFondo = 6;
+
+            }
+            //
+            if (intersects12.length > 0) {
+                estadoCambioFondo = 7;
+
+            }
+            if (intersects14.length > 0) {
+                estadoCambioFondo = 0;
+
+            }
+            if (intersects10.length > 0) {
+                estadoCambioFondo = 6;
+
+            }
+            if (intersects11.length > 0) {
+                estadoCambioFondo = 4;
+
+            }
+            if (intersects8.length > 0) {
+                estadoCambioFondo = 5;
+
+            }
+            if (intersects9.length > 0) {
+                estadoCambioFondo = 2;
+
+            }
+            if (intersects7.length > 0) {
+                estadoCambioFondo = 4;
+
+            }
+            if (intersects6.length > 0) {
+                estadoCambioFondo = 0;
+
+            }
+
+            if (intersects5.length > 0) {
+                estadoCambioFondo = 2;
+
+            }
+
+            if (intersects4.length > 0) {
+                estadoCambioFondo = 1;
+
+            }
+            if (intersects3.length > 0) {
+                estadoCambioFondo = 3;
+
+            }
+            if (intersects2.length > 0) {
+                estadoCambioFondo = 0;
+
+            }
+            if (intersects.length > 0) {
+                estadoCambioFondo = 1;
+
+            }
+        }
+        document.addEventListener('mousedown', onDocumentMouseDown, false);
+        //
+
+        //
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        //
+
+        // Animar el cubo
+        function animate() {
+            console.log("Botón antes de eliminar:", estadoCambioFondo);
+            requestAnimationFrame(animate);
+            button.position.y = 100000;
+            button2.position.y = 100000;
+            button3.position.y = 100000;
+            button4.position.y = 100000;
+            button5.position.y = 100000;
+            button6.position.y = 100000;
+            button7.position.y = 100000;
+            button8.position.y = 100000;
+            button9.position.y = 100000;
+            button10.position.y = 100000;
+            button11.position.y = 100000;
+            button12.position.y = 100000;
+            button13.position.y = 100000;
+            button14.position.y = 100000;
+            button15.position.y = 100000;
+            button16.position.y = 100000;
+            button17.position.y = 100000;
+            button18.position.y = 100000;
+            button19.position.y = 100000;
+            button20.position.y = 100000;
+            button21.position.y = 100000;
+            button22.position.y = 100000;
+            button23.position.y = 100000;
+            button24.position.y = 100000;
+            button25.position.y = 100000;
+            button26.position.y = 100000;
+            button27.position.y = 100000;
+            button28.position.y = 100000;
+            button29.position.y = 100000;
+            button30.position.y = 100000;
+            button31.position.y = 100000;
+            button32.position.y = 100000;
+            button33.position.y = 100000;
+            button34.position.y = 100000;
+            button35.position.y = 100000;
+            button36.position.y = 100000;
+            button37.position.y = 100000;
+            button38.position.y = 100000;
+            button39.position.y = 100000;
+            button40.position.y = 100000;
+            button41.position.y = 100000;
+            button42.position.y = 100000;
+            button43.position.y = 100000;
+            button44.position.y = 100000;
+            if (estadoCambioFondo == 1) {
+                scene.background = texturePrueba;
+                button2.position.y = 0;
+                button3.position.y = 0;
+
+
+            }
+            if (estadoCambioFondo == 3) {
+                scene.background = texturePrueba2;
+
+                button4.position.y = 0;
+
+            }
+            if (estadoCambioFondo == 0) {
+                scene.background = texture;
+
+                button.position.y = 0;
+                button5.position.y = 0;
+                button10.position.y = 0;
+                nuevoTexto = "Cuarto piso";
+                document.getElementById('texto').innerHTML = nuevoTexto;
+            }
+
+            if (estadoCambioFondo == 2) {
+                scene.background = texturePrueba3;
+
+                button6.position.y = 0;
+                button7.position.y = 0;
+
+            }
+            if (estadoCambioFondo == 4) {
+                scene.background = texturePrueba4;
+
+                button8.position.y = 0;
+                button9.position.y = 0;
+            }
+            if (estadoCambioFondo == 5) {
+                scene.background = texturePrueba5;
+
+                button11.position.y = 0;
+            }
+            if (estadoCambioFondo == 6) {
+                scene.background = texturePrueba6;
+
+                button23.position.y = 0;
+                button12.position.y = 0;
+                button13.position.y = 0;
+                button14.position.y = 0;
+                nuevoTexto = "Tercer piso";
+                document.getElementById('texto').innerHTML = nuevoTexto;
+            }
+            if (estadoCambioFondo == 7) {
+                scene.background = texturePrueba7;
+
+                button15.position.y = 0;
+                button16.position.y = 0;
+
+            }
+            if (estadoCambioFondo == 8) {
+                scene.background = texturePrueba8;
+
+                button17.position.y = 0;
+            }
+            if (estadoCambioFondo == 9) {
+                scene.background = texturePrueba9;
+
+                button18.position.y = 0;
+                button19.position.y = 0;
+
+            }
+            if (estadoCambioFondo == 10) {
+                scene.background = texturePrueba10;
+
+                button20.position.y = 0;
+                button21.position.y = 0;
+            }
+            if (estadoCambioFondo == 11) {
+                scene.background = texturePrueba11;
+
+                button22.position.y = 0;
+            }
+            if (estadoCambioFondo == 12) {
+                scene.background = texturePrueba12;
+
+                button24.position.y = 0;
+                button25.position.y = 0;
+                button26.position.y = 0;
+                button27.position.y = 0;
+                button43.position.y = 0;
+                nuevoTexto = "Segundo piso";
+                document.getElementById('texto').innerHTML = nuevoTexto;
+            }
+            if (estadoCambioFondo == 13) {
+                scene.background = texturePrueba13;
+
+                button28.position.y = 0;
+                button29.position.y = 0;
+            }
+            if (estadoCambioFondo == 14) {
+                scene.background = texturePrueba14;
+
+                button30.position.y = 0;
+
+            }
+            if (estadoCambioFondo == 15) {
+                scene.background = texturePrueba15;
+
+                button31.position.y = 0;
+                button32.position.y = 0;
+
+            }
+            if (estadoCambioFondo == 16) {
+                scene.background = texturePrueba16;
+
+                button33.position.y = 0;
+                button34.position.y = 0;
+
+            }
+            if (estadoCambioFondo == 17) {
+                scene.background = texturePrueba17;
+
+                button35.position.y = 0;
+
+            }
+            if (estadoCambioFondo == 18) {
+                scene.background = texturePrueba18;
+
+                button36.position.y = 0;
+                button37.position.y = 0;
+                button38.position.y = 0;
+                button44.position.y = 0;
+                nuevoTexto = "Primer piso";
+                document.getElementById('texto').innerHTML = nuevoTexto;
+
+            }
+            if (estadoCambioFondo == 19) {
+                scene.background = texturePrueba19;
+
+                button39.position.y = 0;
+                button40.position.y = 0;
+
+
+            }
+            if (estadoCambioFondo == 20) {
+                scene.background = texturePrueba20;
+
+                button41.position.y = 0;
+
+            }
+            if (estadoCambioFondo == 21) {
+                scene.background = texturePrueba21;
+
+                button42.position.y = 0;
+
+            }
+            renderer.render(scene, camera);
+
+        }
+
+        // Llamar a la función de animación
+        animate();
+    </script>
+</body>
+
+</html>
